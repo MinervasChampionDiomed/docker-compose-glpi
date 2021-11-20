@@ -1,0 +1,31 @@
+version: '3.2'
+
+services:
+  # MySQL container for persistance data
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.34
+    hostname: mysql
+    restart: always
+    volumes:
+      - ${PWD}/mysql:/var/lib/mysql
+    env_file:
+      - ${PWD}/mysql.env
+
+  # GLPI Container
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi
+    restart: always
+    hostname: glpi
+    ports:
+      - 80:80
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ${PWD}/glpi:/var/www/html/glpi
+    environment:
+      - TIMEZONE=America/Bogota
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.conf.all.src_valid_mark=1
